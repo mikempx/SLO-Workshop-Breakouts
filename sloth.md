@@ -19,7 +19,7 @@ Copy the getting_started.yml file with cp getting_started.yml slo-requests.yml
 Edit (vi) slo-requests.yml
 sum(rate(mythical_request_times_count{job="eStore-server", status!~"5.."}[1m]))
 sum(rate(mythical_request_times_count{job="eStore-server", status=~"5.."}[1m]))
-
+sum by (endpoint) (rate(mythical_request_times_count{job="eStore-server"}[1m]))
 
 Second, we will first need to create a recording rule to determine what percentage of transactions are above or below 3 seconds.
 beasts_service_slo:success_per_request:ratio_rate1h
