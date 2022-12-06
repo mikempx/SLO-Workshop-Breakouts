@@ -1,14 +1,10 @@
 # Create and Import Multi-Window, Multi-Burn Rate Alerts, Recording Rules, and Dashboards into Grafana Cloud
-We will be revamping the following dashboard.
+We have just instrumented our cutting-edge critical business application, Mythical Beasts, and now would like to use SLOs to help the organization decide on whether to innovate faster and develop new Mythical Beasts features, or work on Service Stability and Performance optimization.
 
-**Prerequisite**: We first need to install Sloth and Mimirtool.
-1. On command line, run the following: git clone https://github.com/slok/sloth.git && cd ./sloth && make build && ls -la ./bin
-2. Using your browser, go to https://github.com/grafana/mimir/releases. 
-3. Next to the _Assets_ section, click on the right arrow to expand the assets. We are looking for mimirtool.
-4. Click on mimirtool-darwin-arm64 to download your mimirtool file.
-5. Go to your download directory. mv mimirtool-darwin-arm64 mimirtool
-6. chmod 755 mimirtool
-7. to verify it is working, run: ./mimirtool version
+Since we already have rolled out the application to early access customers, we are tracking application performance, errors, and overall load in the `Mythical Inc., Top Level Endpoints RED (MLT)` dashboard.
+
+(1) In your Grafana UI, click on the magnifying glass to search for the dashboard mentioned above. Type in `myth`. Click on the dashboard name to drill in.
+![magnifying-glass](img/magnifying-glass.png)
 
 Our Application
 We will be using the Mythical Beasts application.  
