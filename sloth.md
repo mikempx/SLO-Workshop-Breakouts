@@ -4,7 +4,10 @@ We have just instrumented our cutting-edge critical business application, Mythic
 Since we already have rolled out the application to early access customers, we are tracking application performance, errors, and overall load in the `Mythical Inc., Top Level Endpoints RED (MLT)` dashboard.
 
 (1) In your Grafana UI, click on the magnifying glass to search for the dashboard mentioned above. Type in `myth`. Click on the dashboard name to drill in.
+
 ![magnifying-glass](img/magnifying-glass.png)
+(2) In the dashboard, 
+![red-dashboard](img/mythical-beasts-RED-dashboard.png)
 
 Our Application
 We will be using the Mythical Beasts application.  
