@@ -9,8 +9,8 @@ Since we already have rolled out the application to early access customers, we a
 (2) In the dashboard, 
 ![red-dashboard](img/mythical-beasts-RED-dashboard.png)
 
-Our Application
-We will be using the Mythical Beasts application.  
+
+![histogram](img/histogram.png)
 
 First, we will do an SLO based on successful requests.
 From the sloth directory, cd examples.  
