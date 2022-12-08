@@ -72,22 +72,17 @@ If you would like more details concerning the features of Grafana's tracing visu
    a. **version**: "prometheus/v1" -> we will keep this definition as our application metrics are Prometheus-based.
    
    b. **service**: "xxx" -> Let's change this value to our service name, `mythical-beasts`
-   c. **labels**: owner, repo, and tier.  These labels are added to our recording rules.  
    
+   c. **labels**: owner, repo, and tier.  These labels are added to our recording rules.  
      * For now, let's delete the `repo` line
-     
      * Keep the line with `tier` as-is (as mythical beasts is a tier 2 application)
-     
      * Change the value of owner from "myteam" to first initial and last name.
      
    d. Next are the **slos**.  Like with this example, we are going to stick with just one SLO - a request/error rate SLO - but our SLO target is going to be much lower.
    
      * Change the comment from "We allow failing (5xx and 429) 1 request every 1000 requests (99.9%)." to `We allow failing (5xx and 429) 1 of every 10 requests (90%).`
-     
      * Since this SLO will be for the login endpoint only, change the name from "requests-availability" to `login-availability`
-     
      * Change the objective from 99.9 to `90.0`
-     
      * Keep the **description** as-is.  This description does not generate any output.
      
 4. We now get to the two **sli** values driving the SLO.  Sloth is a ratio-based SLO tool, and we need to define two SLIs: (1) our error count and (2) our total count.
