@@ -24,6 +24,14 @@ Since we already have rolled out the application to early access customers, we a
 
 If you would like more details concerning the features of Grafana's tracing visualization in Explore, go here: https://grafana.com/docs/grafana/latest/explore/trace-integration/
 
+### Create SLO files based on existing examples from Sloth
+Now that we are familiar with the key performance metrics that represent our application's health, we will now focus our efforts on creating our first SLO using `Sloth`.  
+
+(1) Using the credentials provided prior to the course, log into your webshell and go to Sloth's root directory (WHERE WILL WE INSTALL?)
+  (1a) cd ~/sloth
+  (1b) in the ./sloth/bin directory contains the sloth binary. In the ./sloth/examples directory, sloth ships with some examples to get started.  Let's go to the examples directory and copy the `getting-started.yml` file.  This is the same file as seen on the sloth.dev web site: https://sloth.dev/examples/default/getting-started/
+  (1c) cp getting-started.yml mythical.yml
+(2) We will now edit the mythical.yml file and use it to define our SLO.
 
 
 ![histogram](img/histogram.png)
