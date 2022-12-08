@@ -6,6 +6,8 @@ Since we already have rolled out the application to early access customers, we a
 (1) In your Grafana UI, click on the magnifying glass to search for the dashboard mentioned above. Type in `myth`. Click on the dashboard name to open the dashboard.
 
 ![magnifying-glass](img/magnifying-glass.png)
+![dashboard-search](img/dashboard-search.png)
+
 (2) Analyze your dashboard. This is considered a "RED" dashboard as it has three distinct sections of data: Request rates(R) in the top left, errors(E) in the top right, and duration(D) or latency metrics in the center.  Since this is a new service, you will likely notice that the error rate percentages are quite elevated. So, our SLOs are going to focus on error rates per endpoint first.
 ![red-dashboard](img/mythical-beasts-RED-dashboard.png)
 
