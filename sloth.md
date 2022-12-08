@@ -47,31 +47,40 @@ If you would like more details concerning the features of Grafana's tracing visu
 
 ### Create SLO files based on existing examples from Sloth
 
-1. Start by logging into the webterminal with your username and password. This will log you into a home directory in a Debian Linux shell where we’ll edit some files and deploy an application to a k8s cluster.
+(1) Start by logging into the webterminal with your username and password. This will log you into a home directory in a Debian Linux shell where we’ll edit some files and deploy an application to a k8s cluster.
 
     Your home directory includes a few things:
 
    * A `sloth` directory containing its executable and a example files.  This was created on your behalf doing a `git clone https://github.com/slok/sloth.git`; downloading the sloth executable from [here](https://github.com/slok/sloth/releases/tag/v0.11.0); and then performing a `chmod +x` to the executable file and renaming the file to sloth.
-   * Mimirtool, which will be used to import your SLOs.  We downloaded Mimirtool from the Assets section of [Mimir's latest release page](https://github.com/grafana/mimir/releases). Mimir documentation can be found [here](https://grafana.com/docs/mimir/latest/operators-guide/tools/mimirtool/)
+   * A `mimirtool` folder. We downloaded Mimirtool from the Assets section of [Mimir's latest release page](https://github.com/grafana/mimir/releases). Mimir documentation can be found [here](https://grafana.com/docs/mimir/latest/operators-guide/tools/mimirtool/)
    
    As mentioned in the workshop presentation, we will use Sloth to create the SLO yaml definitions file, and then we will use Mimirtool to import those rules within the SLO definitions file.
    
    * We will also need to get an API key in order for Mimirtool to authenticate with Grafana Cloud.
    * Finally, we will import an SLO dashboard provided by Sloth to track our SLOs visually.
 
-   We’re going to first modify the requesting service so we can get some traces out of it, and see them in Grafana Cloud.
+   We’re going to first modify Sloth's "Getting Started" file for a single SLO on a single application endpoint, and see them in Grafana Cloud.
 
-2. Run:
+(2) Run:
    ```bash
    pico ./sloth/examples/getting-started.yaml
    ```
    in the shell.
 
-   In this source file you’ll see some definitions that:
+(3) In this source file, we need to edit many of the definitions.
 
-   * ...
-   * ...
-   * ...
+   a. ``version``: "prometheus/v1" -> we will keep this definition as our application metrics are Prometheus-based.
+   b. service: "xxx" -> Let's change this value to our service name, `mythical-beasts`
+   c. labels: owner, repo, and tier.  These labels are added to our recording rules.  
+     * For now, let's delete the `repo` line
+     * Keep the line with `tier` as-is (as mythical beasts is a tier 2 application)
+     * Change the value of owner from "myteam" to first initial and last name.
+   d. Next is the SLO itself.  We going to stick with an request/error rate SLO here, but our SLO target is going to be much lower.
+     * Change the comment from "We allow failing (5xx and 429) 1 request every 1000 requests (99.9%)." to `We allow failing (5xx and 429) 1 of every 10 requests (90%). 
+     * Since this SLO will be for the login endpoint only, change the name from "requests-availability" to `login-availability`
+     * Change the objective from 99.9 to `90.0`
+     * Keep the description as-is.  This description does not generate any output.
+4. We now get to the SLIs driving the SLO.  Sloth is a ratio-based SLO tool, and we need to define two SLIs: (1) our error count and (2) our total count.
    This `....` function is to....
 
 3. At the top of the source file, add:
