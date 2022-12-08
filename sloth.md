@@ -51,8 +51,8 @@ If you would like more details concerning the features of Grafana's tracing visu
 
     Your home directory includes a few things:
 
-   * A `sloth` directory containing its executable and a example files.
-   * Mimirtool (link) and description
+   * A `sloth` directory containing its executable and a example files.  This was created on your behalf doing a `git clone https://github.com/slok/sloth.git`; downloading the sloth executable from [here](https://github.com/slok/sloth/releases/tag/v0.11.0); and then performing a `chmod +x` to the executable file and renaming the file to sloth.
+   * Mimirtool (link). Mimir documentation can be found [here](https://grafana.com/docs/mimir/latest/operators-guide/tools/mimirtool/)
    
    As mentioned in the workshop presentation, we will use Sloth to create the SLO yaml definitions file, and then we will use Mimirtool to import those rules within the SLO definitions file.
    
