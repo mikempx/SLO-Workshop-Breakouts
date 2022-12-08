@@ -46,7 +46,49 @@ Since we already have rolled out the application to early access customers, we a
 If you would like more details concerning the features of Grafana's tracing visualization in Explore, go here: https://grafana.com/docs/grafana/latest/explore/trace-integration/
 
 ### Create SLO files based on existing examples from Sloth
-Now that we are familiar with the key performance metrics that represent our application's health, we will now focus our efforts on creating our first SLO using `Sloth`.  
+
+1. Start by logging into the webterminal with your username and password. This will log you into a home directory in a Debian Linux shell where we’ll edit some files and deploy an application to a k8s cluster.
+
+    Your home directory includes a few things:
+
+   * A `sloth` directory containing its executable and a example files.
+   * Mimirtool (link) and description
+   
+   As mentioned in the workshop presentation, we will use Sloth to create the SLO yaml definitions file, and then we will use Mimirtool to import those rules within the SLO definitions file.
+   
+   * We will also need to get an API key in order for Mimirtool to authenticate with Grafana Cloud.
+   * Finally, we will import an SLO dashboard provided by Sloth to track our SLOs visually.
+
+   We’re going to first modify the requesting service so we can get some traces out of it, and see them in Grafana Cloud.
+
+2. Run:
+   ```bash
+   pico ./sloth/examples/getting-started.yaml
+   ```
+   in the shell.
+
+   In this source file you’ll see some definitions that:
+
+   * ...
+   * ...
+   * ...
+   This `....` function is to....
+
+3. At the top of the source file, add:
+
+   ```....
+   ```
+
+
+4. Move to the `BLAH` function definition. You can see XXXX. We’re going to modify the existing xxxx.
+
+   After the `BLAH` line, add a newline with ‘Enter’, and then add:
+   ```blH
+    ...
+   ```
+
+   This will do a few things......
+ 
 
 (1) Using the credentials provided prior to the course, log into your webshell and go to Sloth's root directory (WHERE WILL WE INSTALL?)
   (1a) cd ~/sloth
