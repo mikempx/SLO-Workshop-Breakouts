@@ -1,4 +1,23 @@
-# Create and Import Multi-Window, Multi-Burn Rate Alerts, Recording Rules, and Dashboards into Grafana Cloud
+
+# Breakout 1 - Create and Import Multi-Window, Multi-Burn Rate Alerts, Recording Rules, and Dashboards into Grafana Cloud
+
+## Pre-requisites
+
+* Linux shell knowledge
+* vim or Nano/Pico editor knowledge
+* Access to the WebShell via the link you received in your workshop email
+  * Note: Username and password should have been pre-supplied
+
+This workshop includes the editing of files in the WebTerminal you have been given login details for. Both vim and pico have been included in the webterminal to allow you to carry out this editing. All of the examples in this breakout use `pico`, as it’s a simple to use editor, but feel free to use `vim` if you’re familiar with it.
+
+The Pico editor can be navigated using your keyboard cursor keys (as well as Page-Up and Page-Down to move pages), as well as some specific `Ctrl` key based shortcuts:
+
+* Paste: **Ctrl-V**
+* Save file: **Ctrl-O**
+* Quit: **Ctrl-X**
+* Cancel: **Ctrl-C**
+
+## Breakout
 We have just instrumented our cutting-edge critical business application, Mythical Beasts, and now would like to use SLOs to help the organization decide on whether to innovate faster and develop new Mythical Beasts features, or work on Service Stability and Performance optimization.
 
 Since we already have rolled out the application to early access customers, we are tracking application performance, errors, and overall load in the `Mythical Inc., Top Level Endpoints RED (MLT)` dashboard.
