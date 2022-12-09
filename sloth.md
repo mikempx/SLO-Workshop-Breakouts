@@ -115,7 +115,9 @@ If you would like more details concerning the features of Grafana's tracing visu
 (7) We are now ready to run Sloth.  From command line, run the following command:
 ```sloth generate -i ./sloth/examples/mythical.yml > ./mythical-beasts-SLO-rules.yml```
 
-Assuming you have no errors, we can now import your SLO rules into Grafana Cloud!  But first, we need to download an API key for data transmission.
+Assuming you have no errors, your output file will look similar to the structure (but not content) found in Sloth's online documentation [here](https://sloth.dev/examples/default/getting-started/) (click on the "Generated" tab).
+![sloth-documentation](img/sloth-documentation.png)
+We can now import your SLO rules into Grafana Cloud!  But first, we need to download an API key for data transmission.
 
 ### Import SLO Alerts and Recording rules into Grafana Cloud
 
