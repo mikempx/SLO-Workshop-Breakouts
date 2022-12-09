@@ -113,7 +113,7 @@ If you would like more details concerning the features of Grafana's tracing visu
 (6) Finally, save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.
 
 (7) We are now ready to run Sloth.  From command line, run the following command:
-```sloth generate -i ./sloth/examples/mythical.yml > ./mythical-beasts-SLO-rules.yml```
+```sloth generate -i ./examples/mythical.yml > ./mythical-beasts-SLO-rules.yml```
 
 Assuming you have no errors, your output file will look similar to the structure (but not content) found in Sloth's online documentation [here](https://sloth.dev/examples/default/getting-started/) (click on the "Generated" tab).
 ![sloth-documentation](img/sloth-documentation.png)
@@ -121,8 +121,14 @@ We can now import your SLO rules into Grafana Cloud!  But first, we need to down
 
 ### Import SLO Alerts and Recording rules into Grafana Cloud
 
-(1) To download an API key, go to the very bottom left of the Grafana UI, hover over the Gear icon and then click on **API keys**
-![gear-icon](img/gear-icon.png)
+(1) To download an API key, you would normally log in as an administrator of your Grafana Cloud account at https://grafana.com/orgs/<your organization>/api-keys and click on **+ Add API Keys**.  However, this is a custom cloud account not affiliated with Grafana Cloud, and so we provided you an API key........................
+ ![api-keygen](img/API-keygen-in-GC.png)
+ (2) Using your slo rules file, your mimirtool executable, and your api key, import your SLO recording rules and alerts:
+ ```./mimirtool rules load ./mythical-beasts-SLO-rules.yml --address=<fulladdress>.grafana.net --id=<yourID> --key="<yourAPIkey>"```
+ 
+ (3) Assuming there were no errors, go to your Grafana UI, and on the left side menu, hover over **Alerting** and then click on **Alert rules**.
+   (3a) 
+
 
 
 ![histogram](img/histogram.png)
@@ -132,14 +138,3 @@ We can now import your SLO rules into Grafana Cloud!  But first, we need to down
 Second, we will first need to create a recording rule to determine what percentage of transactions are above or below 3 seconds.
 beasts_service_slo:success_per_request:ratio_rate1h
 
-
-
-
-
-
-
-
-
-
-
-![MyImage](img/img.png)
