@@ -63,7 +63,8 @@ If you would like more details concerning the features of Grafana's tracing visu
 
 (2) Run:
    ```bash
-   pico ./sloth/examples/getting-started.yaml
+   cp ./sloth/examples/getting-started.yaml ./sloth/examples/mythical.yaml
+   pico ./sloth/examples/mythical.yaml
    ```
    in the shell.
 
@@ -99,49 +100,32 @@ If you would like more details concerning the features of Grafana's tracing visu
    - If you are curious, we leave the "sum by http_target" in the formula because we have multiple pods supporting the application, and so those metrics need to be aggregated.  
    - We also use a `[{{.window}}]` notation for the time range because is a variable in Sloth. Sloth fills this value in for each of the recording rules it creates for each of our time windows: 5m, 30m, 1h, 2h, 6h, 1d, 3d, 30d.
    
-   (4c) Copy and paste this formula into the **total_query:** field. Notice the only difference is the status_code NOT(!) an error.
-     ```sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code!="STATUS_CODE_ERROR"}[{{.window}}]))```
+   (4c) Copy and paste this formula into the **total_query** field. Notice the only difference between this formula and the error_query formula is the status_code NOT(!) empty.
+   
+     ```sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code!=""}[{{.window}}]))```
      
 (5) Not that our SLIs are defined, we need two minor edits to our alerting section:
 
-    (5a) Change the alerting **name:** to ```MythicalBeastsHighErrorRate-login```
+    (5a) Change the alerting **name** to ```MythicalBeastsHighErrorRate-login```
     
-    (5b) Change the alert summary from "High error rate on 'myservice' requests responses" to ```"High error rate on Mythical Beast login request responses"```
+    (5b) Change the alert annotations **summary** from "High error rate on 'myservice' requests responses" to ```"High error rate on Mythical Beast login request responses"```
    
+(6) Finally, save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.
 
+(7) We are now ready to run Sloth.  From command line, run the following command:
+```sloth generate -i ./sloth/examples/mythical.yml > ./mythical-beasts-SLO-rules.yml```
 
-3. At the top of the source file, add:
+Assuming you have no errors, we can now import your SLO rules into Grafana Cloud!  But first, we need to download an API key for data transmission.
 
-   ```....
-   ```
+### Import SLO Alerts and Recording rules into Grafana Cloud
 
-
-4. Move to the `BLAH` function definition. You can see XXXX. We’re going to modify the existing xxxx.
-
-   After the `BLAH` line, add a newline with ‘Enter’, and then add:
-   ```blH
-    ...
-   ```
-
-   This will do a few things......
- 
-
-(1) Using the credentials provided prior to the course, log into your webshell and go to Sloth's root directory (WHERE WILL WE INSTALL?)
-  (1a) cd ~/sloth
-  (1b) in the ./sloth/bin directory contains the sloth binary. In the ./sloth/examples directory, sloth ships with some examples to get started.  Let's go to the examples directory and copy the `getting-started.yml` file.  This is the same file as seen on the sloth.dev web site: https://sloth.dev/examples/default/getting-started/
-  (1c) cp getting-started.yml mythical.yml
-(2) We will now edit the mythical.yml file and use it to define our SLO.
+(1) To download an API key, go to the very bottom left of the Grafana UI, hover over the Gear icon and then click on **API keys**
+![gear-icon](img/gear-icon.png)
 
 
 ![histogram](img/histogram.png)
 
-First, we will do an SLO based on successful requests.
-From the sloth directory, cd examples.  
-Copy the getting_started.yml file with cp getting_started.yml slo-requests.yml
-Edit (vi) slo-requests.yml
-sum(rate(mythical_request_times_count{job="eStore-server", status!~"5.."}[1m]))
-sum(rate(mythical_request_times_count{job="eStore-server", status=~"5.."}[1m]))
-sum by (endpoint) (rate(mythical_request_times_count{job="eStore-server"}[1m]))
+
 
 Second, we will first need to create a recording rule to determine what percentage of transactions are above or below 3 seconds.
 beasts_service_slo:success_per_request:ratio_rate1h
