@@ -88,21 +88,24 @@ If you would like more details concerning the features of Grafana's tracing visu
 (4) We now get to the two **sli** values driving the SLO.  Sloth is a ratio-based SLO tool, and we need to define two SLIs: (1) our error count and (2) our total count. 1 minute this ratio is our SLO percentage.
    (4a) The formula of `sum(rate(http_request_duration_seconds_count{job="myservice",code=~"(5..|429)"}[{{.window}}]))` is not correct for our application. To understand the formula we need, we need to look at how we are capturing the error percentages today.
    - Go back to our dashboard and click on the top of the panel named, `Error Percentages by Target` and then click `Edit Panel`. 
-![edit-panel](img/edit-panel.png)
+![edit-formula](img/edit-formula.png)
    - You will see this crazy formula.  It is a ratio of errored traces versus total traces by http_target/endpoint.  However, we want SLOs for each endpoint separately.
 
 ``(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code="STATUS_CODE_ERROR",http_target=~"\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) /
 (sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code!="",http_target!="\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) * 100``
-
+![errors-formula](img/errors-formula.png)
    (4b) Let's focus on the `/login` http_target first.  Copy and paste this formula into the **error_query** field:
      ```sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code="STATUS_CODE_ERROR"}[{{.window}}]))```
    - If you are curious, we leave the "sum by http_target" in the formula because we have multiple pods supporting the application, and so those metrics need to be aggregated.  
    - We also use a `[{{.window}}]` notation for the time range because is a variable in Sloth. Sloth fills this value in for each of the recording rules it creates for each of our time windows: 5m, 30m, 1h, 2h, 6h, 1d, 3d, 30d.
    
-   (4c) Copy and paste this formula into the `total_query:` field. Notice the only difference is the status_code NOT(!) an error.
+   (4c) Copy and paste this formula into the **total_query:** field. Notice the only difference is the status_code NOT(!) an error.
      ```sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code!="STATUS_CODE_ERROR"}[{{.window}}]))```
+     
 (5) Not that our SLIs are defined, we need two minor edits to our alerting section:
+
     (5a) Change the alerting **name:** to ```MythicalBeastsHighErrorRate-login```
+    
     (5b) Change the alert summary from "High error rate on 'myservice' requests responses" to ```"High error rate on Mythical Beast login request responses"```
    
 
