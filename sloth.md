@@ -127,8 +127,14 @@ We can now import your SLO rules into Grafana Cloud!  But first, we need to down
  ```./mimirtool rules load ./mythical-beasts-SLO-rules.yml --address=<fulladdress>.grafana.net --id=<yourID> --key="<yourAPIkey>"```
  
  (3) Assuming there were no errors, go to your Grafana UI, and on the left side menu, hover over **Alerting** and then click on **Alert rules**.
-   (3a) 
-
+ 
+   (3a) You should see your recording rules as well as your alerts listed.  To see your recording rules, use the "Search by label" capability by typing in ```sloth_slo=login-availability```.  Results similar to the picture below should appear. You have two sets of recording rules: "sloth-slo-meta-recordings-mythical-beasts-login-availability" - or the meta recording rules - and the "sloth-slo-sli-all-recordings-mythical-beasts-login-availability" - or SLI/SLO - recording rules.  While the meta recording rules are fairly simplistic, expand the first SLI/SLO recording rule by clicking on the **>** next to it.  As you can see in the picture below, Sloth created this complex formula on your behalf.
+ 
+  ![recording-rules](img/recording-rules.png)
+ 
+  (3b) As for alerts generated, two multi-time window, multi-burn rate alerts are generated.  To see your alert rules, use the "Search by label" capability by typing in ```category=availability```.  Results similar to the picture below should appear.  One is for slow burns over longer periods of time, which has a tag of ```sloth_severity=ticket```. The second alert is for higher burn rates over shorter periods of time and has a tag of ```sloth_severity=page```.  These tags can be used to route your SLO alerts to say, Slack, for an SRE to investigate immediately if you are experiencing high burn rates, and then route your slow burn rate alerts to your ticketing system for scheduled analysis.
+ 
+  ![slo-alerts](img/slo-alerts.png)
 
 
 ![histogram](img/histogram.png)
