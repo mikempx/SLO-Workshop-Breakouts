@@ -202,5 +202,19 @@ In our SLO ratio, we will be using one of these le targets as our demarcation po
  (4) Save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.
  
  (5) We are now ready to run Sloth.  From command line, run the following command:
-```sloth generate -i ./examples/mythical.yml > ./mythical-beasts-SLO-rules.yml```
+```sloth generate -i ./examples/mythical-latency.yml > ./mythical-beasts-SLO-latencyrules.yml```
+ 
+ We can now import your SLO rules into Grafana Cloud.  We will re-use your API key for the import process.  
+ (6) Using your slo rules file, your mimirtool executable, and your api key, import your SLO recording rules and alerts:  
+ ```./mimirtool rules load ./mythical-beasts-SLO-latencyrules.yml --address=<fulladdress>.grafana.net --id=<yourID> --key="<yourAPIkey>"```
+ 
+ (7) Assuming there were no errors, go to your Grafana UI, and on the left side menu, hover over **Alerting** and then click on **Alert rules**.
+ 
+   (7a) You should see your recording rules as well as your alerts listed.  To see your recording rules, use the "Search by label" capability by typing in ```sloth_slo=login-latency```.  Results similar to the picture below should appear. You have two sets of recording rules: "sloth-slo-meta-recordings-mythical-beasts-login-latency" - or the meta recording rules - and the "sloth-slo-sli-all-recordings-mythical-beasts-login-latency" - or SLI/SLO - recording rules.  While the meta recording rules are fairly simplistic, expand the first SLI/SLO recording rule by clicking on the **>** next to it. 
+ 
+  (7b) As for alerts generated, two multi-time window, multi-burn rate alerts are generated.  To see your alert rules, use the "Search by label" capability by typing in ```category=latency```.  Results similar to the picture below should appear.  One is for slow burns over longer periods of time, which has a tag of ```sloth_severity=ticket```. The second alert is for higher burn rates over shorter periods of time and has a tag of ```sloth_severity=page```.  These tags can be used to route your SLO alerts to say, Slack, for an SRE to investigate immediately if you are experiencing high burn rates, and then route your slow burn rate alerts to your ticketing system for scheduled analysis.
+ 
+At this point, if you are the type of student that likes to work at their own pace and happen to be far ahead of the current classroom pace and would like to test more of your Sloth configuration file skills, feel free to create additional latency SLOs for the other application endpoints (/account, /health, cart, /fastcache, and /payment).  If you don't finish during the class, that is OK. An example configuration file to refer back to is [here](/examples/slo_config_latency.yml).
+ 
+ [END OF HANDS-ON PORTION OF THE WORKSHOP]
  
