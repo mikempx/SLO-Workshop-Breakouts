@@ -103,7 +103,7 @@ If you would like more details concerning the features of Grafana's tracing visu
    
    (4c) Copy and paste this formula into the **total_query** field. Notice the only difference between this formula and the error_query formula is the status_code NOT(!) empty.
    
-     ```sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code!=""}[{{.window}}]))```
+     `sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code!=""}[{{.window}}]))`
      
 (5) Not that our SLIs are defined, we need two minor edits to our alerting section:
 
@@ -111,7 +111,9 @@ If you would like more details concerning the features of Grafana's tracing visu
     
     (5b) For alerting labels, keep the existing `category: "availability"` key value pair.  Add a new label-value pair called `type: "slo"` (vertically in line with your existing label).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI. 
     
-    (5c) Change the alert annotations **summary** from "High error rate on 'myservice' requests responses" to ```"High error rate on Mythical Beast login request responses"```
+    (5c) Change the alert annotations **summary** from "High error rate on 'myservice' requests responses" to `"High error rate on Mythical Beast login request responses"`
+    
+    (5d) Delete the last 8 lines (a 4-line page_alert block and a 4-line ticket_alert block). This allows you to set custom tags for "page" versus "ticket" types of alerts as mentioned in the presentation.  You will see that page versus ticket alert types are automatically defined and appropriated tagged with the label, "sloth_severity", without adding extra labels to our definition.  
    
 (6) Finally, save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.
 
@@ -183,6 +185,4 @@ In our SLO ratio, we will be using one of these le targets as our demarcation po
  
 (3)  
 
-Second, we will first need to create a recording rule to determine what percentage of transactions are above or below 3 seconds.
-beasts_service_slo:success_per_request:ratio_rate1h
 
