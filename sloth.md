@@ -183,6 +183,30 @@ In our SLO ratio, we will be using one of these le targets as our demarcation po
 (2) Edit the new Sloth definition file. Run:
     ```pico ./sloth/examples/mythical-latency.yaml```
  
-(3)  
+(3) Go directly to the "slo" section of the file.
+   
+ (3a) Edit the comment to say, "We define unacceptable latency as any transaction slower than 200ms."
+ 
+ (3b) Change the **name** from login-availability to `login-latency`
+ 
+ (3c) Change the **objective** from 90 to a much more stringent `99.5`.
+ 
+ (3d) Change the **description** from "Common SLO based on availability for HTTP request responses." to `Common SLO based on latency for HTTP request responses.`
+ 
+ (3e) Paste in the following for our new sli->events->**error_query**: `sum(rate(mythical_request_times_count{endpoint="login"}[{{.window}}]))  - sum(rate(mythical_request_times_bucket{endpoint="login", le="200"}[{{.window}}]))`
+ 
+ This formula counts the total number of transactions and subtracts the number of "good" or "acceptable" performing transactions (completing in <200 milliseconds) to arrive at an "unacceptable" transaction count.
+ 
+ (3f) Paste in the following for our new sli->events->**total_query**: `sum(rate(mythical_request_times_count{endpoint="login"}[{{.window}}]))`
+ This formula counts the total number of transactions.
 
-
+ (3g) Change the alerting **name** from MythicalBeastsHighErrorRate-login to `MythicalBeastsHighLatency-login`
+ 
+ (3h) Change the **labels** category value from `availability` to `latency`
+ 
+ (3i) Change the alerting annotations summary from "High error rate on Mythical Beast login request responses" to "High latency on Mythical Beast login request responses"
+ 
+ (4) Save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.
+ 
+ 
+ 
