@@ -79,44 +79,39 @@ If you would like more details concerning the features of Grafana's tracing visu
      - Keep the line with `tier` as-is (as mythical beasts is a tier 2 application).  
      - Change the value of owner from "myteam" to your first initial and last name.  
      - Add a new label-value pair called `type: "slo"`(vertically indented the same as your existing labels).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI.  
-   d. Next are the **slos**.  Like with this example, we are going to stick with just one SLO - a request/error rate SLO - but our SLO target is going to be much lower.
-     - Change the comment from "We allow failing (5xx and 429) 1 request every 1000 requests (99.9%)." to `We allow failing (5xx and 429) 1 of every 10 requests (90%).`
+   d. Next are the **slos**.  Like with this example, we are going to stick with just one SLO - a request/error rate SLO - but our SLO target is going to be much lower.  
+     - Change the comment from "We allow failing (5xx and 429) 1 request every 1000 requests (99.9%)." to `We allow failing (5xx and 429) 1 of every 10 requests (90%).`. 
      - Since this SLO will be for the login endpoint only, change the name from "requests-availability" to `login-availability`
-     - Change the objective from 99.9 to `90.0`
-     - Keep the **description** as-is.  This description does not generate any output.
+     - Change the objective from 99.9 to `90.0`. 
+     - Keep the **description** as-is.  This description does not generate any output.  
      
-(4) We now get to the two **sli** values driving the SLO.  Sloth is a ratio-based SLO tool, and we need to define two SLIs: (1) our error count and (2) our total count. 1 minute this ratio is our SLO percentage.
-   (4a) The formula of `sum(rate(http_request_duration_seconds_count{job="myservice",code=~"(5..|429)"}[{{.window}}]))` is not correct for our application. To understand the formula we need, we need to look at how we are capturing the error percentages today.
-   - Go back to our dashboard and click on the top of the panel named, `Error Percentages by Target` and then click `Edit Panel`. 
+(4) We now get to the two **sli** values driving the SLO.  Sloth is a ratio-based SLO tool, and we need to define two SLIs: (1) our error count and (2) our total count. 1 minute this ratio is our SLO percentage.  
+   (4a) The formula of `sum(rate(http_request_duration_seconds_count{job="myservice",code=~"(5..|429)"}[{{.window}}]))` is not correct for our application. To understand the formula we need, we need to look at how we are capturing the error percentages today.  
+   - Go back to our dashboard and click on the top of the panel named, `Error Percentages by Target` and then click `Edit Panel`.  
 ![edit-formula](img/edit-formula.png)
-   - You will see this crazy formula.  It is a ratio of errored traces versus total traces by http_target/endpoint.  However, we want SLOs for each endpoint separately.
+   - You will see this crazy formula.  It is a ratio of errored traces versus total traces by http_target/endpoint.  However, we want SLOs for each endpoint separately.  
 
-``(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code="STATUS_CODE_ERROR",http_target=~"\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) /
-(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code!="",http_target!="\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) * 100``
+```(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code="STATUS_CODE_ERROR",http_target=~"\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) /
+(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code!="",http_target!="\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) * 100```
+
 ![errors-formula](img/errors-formula.png)
-   (4b) Let's focus on the `/login` http_target first.  Copy and paste this formula into the **error_query** field:
+   (4b) Let's focus on the `/login` http_target first.  Copy and paste this formula into the **error_query** field:  
      ```sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code="STATUS_CODE_ERROR"}[{{.window}}]))```
-   - If you are curious, we leave the "sum by http_target" in the formula because we have multiple pods supporting the application, and so those metrics need to be aggregated.  
-   - We also use a `[{{.window}}]` notation for the time range because is a variable in Sloth. Sloth fills this value in for each of the recording rules it creates for each of our time windows: 5m, 30m, 1h, 2h, 6h, 1d, 3d, 30d.
-   
-   (4c) Copy and paste this formula into the **total_query** field. Notice the only difference between this formula and the error_query formula is the status_code NOT(!) empty.
-   
-     `sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code!=""}[{{.window}}]))`
      
-(5) Not that our SLIs are defined, we need two minor edits to our alerting section:
-
+   - If you are curious, we leave the "sum by http_target" in the formula because we have multiple pods supporting the application, and so those metrics need to be aggregated.  
+   - We also use a `[{{.window}}]` notation for the time range because is a variable in Sloth. Sloth fills this value in for each of the recording rules it creates for each of our time windows: 5m, 30m, 1h, 2h, 6h, 1d, 3d, 30d.  
+   (4c) Copy and paste this formula into the **total_query** field. Notice the only difference between this formula and the error_query formula is the status_code NOT(!) empty.  
+     `sum by (http_target)(increase(traces_spanmetrics_calls_total{service="mythical-server",http_target=~"/login", status_code!=""}[{{.window}}]))`
+   
+(5) Not that our SLIs are defined, we need two minor edits to our alerting section:  
     (5a) Change the alerting **name** to ```MythicalBeastsHighErrorRate-login```
     
-    (5b) For alerting labels, keep the existing `category: "availability"` key value pair.  Add a new label-value pair called `type: "slo"` (vertically in line with your existing label).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI. 
-    
-    (5c) Change the alert annotations **summary** from "High error rate on 'myservice' requests responses" to `"High error rate on Mythical Beast login request responses"`
-    
+    (5b) For alerting labels, keep the existing `category: "availability"` key value pair.  Add a new label-value pair called `type: "slo"` (vertically in line with your existing label).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI.  
+    (5c) Change the alert annotations **summary** from "High error rate on 'myservice' requests responses" to `"High error rate on Mythical Beast login request responses"`  
     (5d) Delete the last 8 lines (a 4-line page_alert block and a 4-line ticket_alert block). This allows you to set custom tags for "page" versus "ticket" types of alerts as mentioned in the presentation.  You will see that page versus ticket alert types are automatically defined and appropriated tagged with the label, "sloth_severity", without adding extra labels to our definition.  
-   
-(6) Finally, save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.
-
+(6) Finally, save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.  
 (7) We are now ready to run Sloth.  From command line, run the following command:
-```sloth generate -i ./examples/mythical.yml > ./mythical-beasts-SLO-rules.yml```
+```sloth generate -i ./examples/mythical.yml > ./mythical-beasts-SLO-rules.yml```. 
 
 Assuming you have no errors, your output file will look similar to the structure (but not content) found in Sloth's online documentation [here](https://sloth.dev/examples/default/getting-started/) (click on the "Generated" tab).
 ![sloth-documentation](img/sloth-documentation.png)
@@ -206,5 +201,6 @@ In our SLO ratio, we will be using one of these le targets as our demarcation po
  
  (4) Save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.
  
- 
+ (5) We are now ready to run Sloth.  From command line, run the following command:
+```sloth generate -i ./examples/mythical.yml > ./mythical-beasts-SLO-rules.yml```
  
