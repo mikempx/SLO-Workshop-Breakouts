@@ -80,9 +80,9 @@ If you would like more details concerning the features of Grafana's tracing visu
      - Change the value of owner from "myteam" to your first initial and last name.  
      - Add a new label-value pair called `type: "slo"`(vertically indented the same as your existing labels).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI.  
    d. Next are the **slos**.  Like with this example, we are going to stick with just one SLO - a request/error rate SLO - but our SLO target is going to be much lower.  
-     - Change the comment from "We allow failing (5xx and 429) 1 request every 1000 requests (99.9%)." to `We allow failing (5xx and 429) 1 of every 10 requests (90%).`. 
-     - Since this SLO will be for the login endpoint only, change the name from "requests-availability" to `login-availability`
-     - Change the objective from 99.9 to `90.0`. 
+     - Change the comment from "We allow failing (5xx and 429) 1 request every 1000 requests (99.9%)." to `We allow failing (5xx and 429) 1 of every 10 requests (90%).`.  
+     - Since this SLO will be for the login endpoint only, change the name from "requests-availability" to `login-availability`  
+     - Change the objective from 99.9 to `90.0`.  
      - Keep the **description** as-is.  This description does not generate any output.  
      
 (4) We now get to the two **sli** values driving the SLO.  Sloth is a ratio-based SLO tool, and we need to define two SLIs: (1) our error count and (2) our total count. 1 minute this ratio is our SLO percentage.  
@@ -91,8 +91,8 @@ If you would like more details concerning the features of Grafana's tracing visu
 ![edit-formula](img/edit-formula.png)
    - You will see this crazy formula.  It is a ratio of errored traces versus total traces by http_target/endpoint.  However, we want SLOs for each endpoint separately.  
 
-```(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code="STATUS_CODE_ERROR",http_target=~"\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) /
-(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code!="",http_target!="\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) * 100```
+`(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code="STATUS_CODE_ERROR",http_target=~"\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) /
+(sum by (http_target)(increase(traces_spanmetrics_calls_total{status_code!="",http_target!="\\/account|\\/health|\\/cart|\\/fastcache|\\/login|\\/payment"}[1m]))) * 100`
 
 ![errors-formula](img/errors-formula.png)
    (4b) Let's focus on the `/login` http_target first.  Copy and paste this formula into the **error_query** field:  
