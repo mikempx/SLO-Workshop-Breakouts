@@ -1,5 +1,5 @@
 
-# Breakout 1 - Create and Import Multi-Window, Multi-Burn Rate Alerts, Recording Rules, and Dashboards into Grafana Cloud
+# Breakout - Create and Import Multi-Window, Multi-Burn Rate Alerts, Recording Rules, and Dashboards into Grafana Cloud
 
 ## Pre-requisites
 
