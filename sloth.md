@@ -159,7 +159,13 @@ An example representation is below where a second SLO has been added for effect.
 
 At this point, if you are the type of student that likes to work at their own pace and happen to be far ahead of the current classroom pace and would like to test your Sloth configuration file skills, feel free to create additional SLOs for the other application endpoints (/account, /health, cart, /fastcache, and /payment).  If you don't finish during the class, that is OK. An example configuration file to refer back to is ![here](/examples/slo_config_availability_only.yml).
  
+ ### Add a latency-based SLO
  
+ Now that we understand how to (a) properly format a Sloth file; (b) use Sloth to generate our rules file; and (c) import those rules using Mimirtool, it is time to add one more SLO type besides our availability/error rate SLOs.  We will now create a latency-based SLO.  To track end user latency, Prometheus captures each transaction in metric type called Histogram.  
+
+#### Histogram Refresher
+A histogram is essentially a set of **counters** with metadata describing the transaction.  In the picture below, I show a subset of the raw histogram data - from the metric, `mythical_request_times_bucket` - where the data is filtered on a single application endpoint called login (using the metadata field, "endpoint"), and we see the counters for several "le" values.  "le" stands for "less than or equal to" and in this case is the number of milliseconds for the transaction. The key to understand histograms is that a single end user transaction can affect the counters of multiple buckets.  So for example, if a new transaction is recorded and its latency is 22 milliseconds, the counters for the last six rows of this table would be incremented by one because the transaction is less than or equal to ("le") 50ms, le 100, le 200, le 500, le 1000, and less than or equal to an infinite amount of time.  In our SLO ratio, we will be using one of these le targets as our threshold.  For the total number of transactions, we could use le infinity, but in practice, most people typically use a total request count counter for this.  In our case, that metric is called `mythical_request_times_count`.
+
 ![histogram](img/histogram.png)
 
 
