@@ -75,12 +75,10 @@ If you would like more details concerning the features of Grafana's tracing visu
    b. **service**: "xxx" -> Let's change this value to our service name, `mythical-beasts`
    
    c. **labels**: owner, repo, and tier.  These labels are added to our recording rules.  
-   
-     - For now, let's delete the `repo` line
-     - Keep the line with `tier` as-is (as mythical beasts is a tier 2 application)
-     - Change the value of owner from "myteam" to your first initial and last name.
-     - Add a new label-value pair called `type: "slo"`(vertically indented the same as your existing labels).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI. 
-     
+     - For now, let's delete the `repo` line. 
+     - Keep the line with `tier` as-is (as mythical beasts is a tier 2 application).  
+     - Change the value of owner from "myteam" to your first initial and last name.  
+     - Add a new label-value pair called `type: "slo"`(vertically indented the same as your existing labels).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI.  
    d. Next are the **slos**.  Like with this example, we are going to stick with just one SLO - a request/error rate SLO - but our SLO target is going to be much lower.
      - Change the comment from "We allow failing (5xx and 429) 1 request every 1000 requests (99.9%)." to `We allow failing (5xx and 429) 1 of every 10 requests (90%).`
      - Since this SLO will be for the login endpoint only, change the name from "requests-availability" to `login-availability`
@@ -162,7 +160,7 @@ Steps to Import:
 An example representation is below where a second SLO has been added for effect.  The reason I find the overview valuable is that it visualizes a state timeline on your behalf for all of your services. So, you can see exactly when your burn rates were running hot.  One thing that can be adjusted on this dashboard is that while we have a datasource variable dropdown at the top of the dashboard, that variable is not propogated to its panels.  This is an easy fix.
 ![dashboard](img/slo-overview.png)
 
-At this point, if you are the type of student that likes to work at their own pace and happen to be far ahead of the current classroom pace and would like to test your Sloth configuration file skills, feel free to create additional SLOs for the other application endpoints (/account, /health, cart, /fastcache, and /payment).  If you don't finish during the class, that is OK. An example configuration file to refer back to is ![here](/examples/slo_config_availability_only.yml).
+At this point, if you are the type of student that likes to work at their own pace and happen to be far ahead of the current classroom pace and would like to test your Sloth configuration file skills, feel free to create additional SLOs for the other application endpoints (/account, /health, cart, /fastcache, and /payment).  If you don't finish during the class, that is OK. An example configuration file to refer back to is [here](/examples/slo_config_availability_only.yml).
  
  ### Add a latency-based SLO
  
