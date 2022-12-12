@@ -78,7 +78,8 @@ If you would like more details concerning the features of Grafana's tracing visu
    
      - For now, let's delete the `repo` line
      - Keep the line with `tier` as-is (as mythical beasts is a tier 2 application)
-     - Change the value of owner from "myteam" to first initial and last name.
+     - Change the value of owner from "myteam" to your first initial and last name.
+     - Add a new label-value pair called `type: "slo"`(vertically indented the same as your existing labels).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI. 
      
    d. Next are the **slos**.  Like with this example, we are going to stick with just one SLO - a request/error rate SLO - but our SLO target is going to be much lower.
      - Change the comment from "We allow failing (5xx and 429) 1 request every 1000 requests (99.9%)." to `We allow failing (5xx and 429) 1 of every 10 requests (90%).`
@@ -108,7 +109,9 @@ If you would like more details concerning the features of Grafana's tracing visu
 
     (5a) Change the alerting **name** to ```MythicalBeastsHighErrorRate-login```
     
-    (5b) Change the alert annotations **summary** from "High error rate on 'myservice' requests responses" to ```"High error rate on Mythical Beast login request responses"```
+    (5b) For alerting labels, keep the existing `category: "availability"` key value pair.  Add a new label-value pair called `type: "slo"` (vertically in line with your existing label).  This will allow us to find our SLO definitions in production more easily in the Grafana Alerting UI. 
+    
+    (5c) Change the alert annotations **summary** from "High error rate on 'myservice' requests responses" to ```"High error rate on Mythical Beast login request responses"```
    
 (6) Finally, save the code you’ve just added by typing **Ctrl-O** and then quit Pico with **Ctrl-X**. If you don’t save, you’ll be first asked if you want to save the file if you just hit **Ctrl-X**.
 
@@ -163,12 +166,22 @@ At this point, if you are the type of student that likes to work at their own pa
  
  Now that we understand how to (a) properly format a Sloth file; (b) use Sloth to generate our rules file; and (c) import those rules using Mimirtool, it is time to add one more SLO type besides our availability/error rate SLOs.  We will now create a latency-based SLO.  To track end user latency, Prometheus captures each transaction in metric type called Histogram.  
 
-#### Histogram Refresher
-A histogram is essentially a set of **counters** with metadata describing the transaction.  In the picture below, I show a subset of the raw histogram data - from the metric, `mythical_request_times_bucket` - where the data is filtered on a single application endpoint called login (using the metadata field, "endpoint"), and we see the counters for several "le" values.  "le" stands for "less than or equal to" and in this case is the number of milliseconds for the transaction. The key to understand histograms is that a single end user transaction can affect the counters of multiple buckets.  So for example, if a new transaction is recorded and its latency is 22 milliseconds, the counters for the last six rows of this table would be incremented by one because the transaction is less than or equal to ("le") 50ms, le 100, le 200, le 500, le 1000, and less than or equal to an infinite amount of time.  In our SLO ratio, we will be using one of these le targets as our threshold.  For the total number of transactions, we could use le infinity, but in practice, most people typically use a total request count counter for this.  In our case, that metric is called `mythical_request_times_count`.
+#### Histogram refresher
+A histogram is essentially a set of **counters** with metadata describing our transactions.  In the picture below, I show a subset of the raw histogram data - from the metric, `mythical_request_times_bucket` - where the data is filtered on a single application endpoint called login (filtering on the metadata field, "endpoint" with a value of "login"). We see the counters - also known as "buckets" - for several "le" values.  "le" stands for "less than or equal to" and in our case is the number of milliseconds for a single transaction. The key to understand histograms is that a single end user transaction can affect the counters of multiple buckets.  So for example, if a new transaction is recorded and its latency is 22 milliseconds, the counters for the last six rows/buckets in this table will be incremented by one because the transaction is less than or equal to ("le") 50ms, le 100, le 200, le 500, le 1000, and less than or equal to an infinite amount of time.  
+ 
+In our SLO ratio, we will be using one of these le targets as our demarcation point of what is deemed good performance versus what is considered unacceptable performance.  For the total number of transactions, we could use le infinity, but in practice, most people typically use a total request count counter for this.  In our case, that total request count metric is called `mythical_request_times_count`.
 
 ![histogram](img/histogram.png)
 
-
+#### Create and add a new Sloth definitions file for application latency-based SLOs
+ 
+(1) Copy our existing Sloth definition file. Run:
+   ```cp ./sloth/examples/mythical.yaml ./sloth/examples/mythical-latency.yaml ```
+ 
+(2) Edit the new Sloth definition file. Run:
+    ```pico ./sloth/examples/mythical-latency.yaml```
+ 
+(3)  
 
 Second, we will first need to create a recording rule to determine what percentage of transactions are above or below 3 seconds.
 beasts_service_slo:success_per_request:ratio_rate1h
