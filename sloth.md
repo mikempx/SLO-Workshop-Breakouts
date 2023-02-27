@@ -145,6 +145,14 @@ Steps to Import:
  If you were to add more SLOs for our application, the dashboard would look similar to this below.
  
 ![dashboard](img/slo-dashboard.png)
+
+__Note__: These are the out-of-box dashboards provided by Sloth ![here](https://sloth.dev/introduction/dashboards/). There are two details to be aware of:
+1. You will see no burn rates in the top graphs if you do not enter in a value.  If you enter a burn rate of `0` into the field `Min Burning Rate`, you will see all of the burn rates.
+![dashboard](img/no-data-fix.png)
+2. You will likely see a graph that says `No Data` in one of the graphs like this (in red):
+![dashboard](img/no-data.png)
+If you click on the top of the No Data panel and then click `Edit`, you will see a complicated formula that uses a time range of `32d`.  In the picture below, I have changed that SLO window to `31d`, and now you see that the data is populating correctly for this panel.  After editing your SLO window to *31d*, click on `Apply` in the top right to apply your change.
+![dashboard](img/no-data-fix.png)
  
  An overview dashboard is also available.
  
@@ -152,7 +160,9 @@ Steps to Import:
  
 (4) In the Import via grafana.com field, type in `14643` and then click *Load*.
  
-An example representation is below where a second SLO has been added for effect.  The reason I find the overview valuable is that it visualizes a state timeline on your behalf for all of your services. So, you can see exactly when your burn rates were running hot.  One thing that can be adjusted on this dashboard is that while we have a datasource variable dropdown at the top of the dashboard, that variable is not propogated to its panels.  This is an easy fix.
+
+ 
+ An example representation is below where a second SLO has been added for effect.  The reason I find the overview valuable is that it visualizes a state timeline on your behalf for all of your services. So, you can see exactly when your burn rates were running hot.  One thing that can be adjusted on this dashboard is that while we have a datasource variable dropdown at the top of the dashboard, that variable is not propogated to its panels.  This is an easy fix.
 ![dashboard](img/slo-overview.png)
 
 At this point, if you are the type of student that likes to work at their own pace and happen to be far ahead of the current classroom pace and would like to test your Sloth configuration file skills, feel free to create additional SLOs for the other application endpoints (/account, /health, cart, /fastcache, and /payment).  If you don't finish during the class, that is OK. An example configuration file to refer back to is [here](/examples/slo_config_availability_only.yml).
